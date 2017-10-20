@@ -44,7 +44,9 @@ class ApiController extends AbstractApiController
                 $component->link,
                 $component->order,
                 $component->group_id,
-                $component->enabled
+                $component->enabled,
+                $component->meta,
+                false
             ));
         } catch (QueryException $e) {
             throw new BadRequestHttpException();
@@ -74,7 +76,9 @@ class ApiController extends AbstractApiController
                     $component->link,
                     $order + 1,
                     $component->group_id,
-                    $component->enabled
+                    $component->enabled,
+                    $component->meta,
+                    true
                 ));
             } catch (QueryException $e) {
                 throw new BadRequestHttpException();
@@ -119,7 +123,7 @@ class ApiController extends AbstractApiController
     {
         $templateSlug = Binput::get('slug');
 
-        if ($template = IncidentTemplate::where('slug', $templateSlug)->first()) {
+        if ($template = IncidentTemplate::where('slug', '=', $templateSlug)->first()) {
             return $template;
         }
 

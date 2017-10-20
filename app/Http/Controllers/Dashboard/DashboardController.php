@@ -48,7 +48,7 @@ class DashboardController extends Controller
     /**
      * The feed integration.
      *
-     * @var \CachetHQ\Cachet\Integrations\Feed
+     * @var \CachetHQ\Cachet\Integrations\Contracts\Feed
      */
     protected $feed;
 
@@ -62,8 +62,8 @@ class DashboardController extends Controller
     /**
      * Creates a new dashboard controller instance.
      *
-     * @param \CachetHQ\Cachet\Integrations\Feed $feed
-     * @param \Illuminate\Contracts\Auth\Guard   $guard
+     * @param \CachetHQ\Cachet\Integrations\Contracts\Feed $feed
+     * @param \Illuminate\Contracts\Auth\Guard             $guard
      *
      * @return void
      */
@@ -127,11 +127,11 @@ class DashboardController extends Controller
      */
     protected function getIncidents()
     {
-        $allIncidents = Incident::notScheduled()->whereBetween('created_at', [
+        $allIncidents = Incident::whereBetween('occurred_at', [
             $this->startDate->copy()->subDays(30)->format('Y-m-d').' 00:00:00',
             $this->startDate->format('Y-m-d').' 23:59:59',
-        ])->orderBy('created_at', 'desc')->get()->groupBy(function (Incident $incident) {
-            return (new Date($incident->created_at))
+        ])->orderBy('occurred_at', 'desc')->get()->groupBy(function (Incident $incident) {
+            return (new Date($incident->occurred_at))
                 ->setTimezone($this->dateTimeZone)->toDateString();
         });
 
